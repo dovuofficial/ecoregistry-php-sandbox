@@ -2,15 +2,9 @@
 
 return [
     [
-        'name' => 'account.get',
+        'name' => 'account.positions',
         'method' => 'GET',
-        'path' => '/account',
-        'description' => 'Fetch the current account profile.',
-    ],
-    [
-        'name' => 'account.update',
-        'method' => 'PUT',
-        'path' => '/account',
-        'description' => 'Update the current account profile.',
+        'path' => '/api-account/v1/positions',
+        'description' => 'Get account balances (positions) including sub-accounts.',
     ],
 ];

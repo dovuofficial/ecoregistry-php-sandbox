@@ -2,21 +2,9 @@
 
 return [
     [
-        'name' => 'auth.login',
+        'name' => 'account.auth',
         'method' => 'POST',
-        'path' => '/auth/login',
-        'description' => 'Authenticate and retrieve an access token.',
-    ],
-    [
-        'name' => 'auth.refresh',
-        'method' => 'POST',
-        'path' => '/auth/refresh',
-        'description' => 'Refresh an expired access token.',
-    ],
-    [
-        'name' => 'auth.me',
-        'method' => 'GET',
-        'path' => '/auth/me',
-        'description' => 'Fetch the currently authenticated user.',
+        'path' => '/api-account/v1/auth',
+        'description' => 'Get the admin token (valid for ~5 minutes).',
     ],
 ];

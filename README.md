@@ -16,38 +16,56 @@ require __DIR__ . '/vendor/autoload.php';
 use Ecoregistry\EcoregistryApi;
 
 $api = new EcoregistryApi(
-    baseUrl: 'https://api.ecoregistry.example',
-    apiSecret: getenv('ECOREGISTRY_API_SECRET') ?: null,
+    baseUrl: 'https://api-ecoregistry-dev.ecoregistry.io/api',
+    apiSecret: null,
     endpointPath: __DIR__ . '/endpoints'
 );
 
-$response = $api->endpoint('projects.list')->call(['page' => 1]);
+$response = $api->endpoint('account.positions')->call([], null, [
+    'platform: ecoregistry',
+    'Authorization: Bearer ' . getenv('ECOREGISTRY_ACCOUNT_TOKEN'),
+    'lng: en',
+]);
 var_dump($response);
 ```
 
 ## Where to put your API secret
 
-Set your API secret as an environment variable (recommended) so it never appears in source control:
+The Account endpoints use an API key for authentication. Store it as an environment variable:
 
 ```bash
-export ECOREGISTRY_API_SECRET="your-secret"
+export ECOREGISTRY_ACCOUNT_APIKEY="your-api-key"
 ```
 
-If you prefer a local file, place it in a `.env` file that is excluded from Git. Then load it before constructing `EcoregistryApi`.
+Use the API key to request a short-lived account token, then store the token as:
 
-## Auth token example
+```bash
+export ECOREGISTRY_ACCOUNT_TOKEN="your-token"
+```
 
-An example script for authenticating and getting a token lives in `examples/auth_token.php`.
+## Auth token example (account endpoints)
+
+An example script for authenticating and getting an account token lives in `examples/auth_token.php`.
 
 ```bash
 php examples/auth_token.php
 ```
 
 ```php
-$response = $api->endpoint('auth.login')->call([], [
+$response = $api->endpoint('account.auth')->call([], [
     'email' => 'you@example.com',
-    'password' => 'your-password',
+    'apikey' => getenv('ECOREGISTRY_ACCOUNT_APIKEY'),
+], [
+    'platform: ecoregistry',
 ]);
+```
+
+## Account balances example
+
+Fetch account balances (positions) with `examples/account_positions.php` after you have a token:
+
+```bash
+php examples/account_positions.php
 ```
 
 ## Endpoint layout (one file per GitBook page)
@@ -71,10 +89,10 @@ endpoints/
 ```php
 return [
     [
-        'name' => 'projects.list',
-        'method' => 'GET',
-        'path' => '/projects',
-        'description' => 'List registered projects.',
+        'name' => 'account.auth',
+        'method' => 'POST',
+        'path' => '/api-account/v1/auth',
+        'description' => 'Get the admin token (valid for ~5 minutes).',
     ],
 ];
 ```
@@ -82,8 +100,10 @@ return [
 ### Calling a specific endpoint
 
 ```php
-$project = $api->endpoint('projects.get')->call([], null, [
-    'X-Request-ID: demo-1234',
+$positions = $api->endpoint('account.positions')->call([], null, [
+    'platform: ecoregistry',
+    'Authorization: Bearer ' . getenv('ECOREGISTRY_ACCOUNT_TOKEN'),
+    'lng: en',
 ]);
 ```
 
@@ -96,4 +116,4 @@ $project = $api->endpoint('projects.get')->call([], null, [
 ## Troubleshooting
 
 - **Unknown endpoint**: Make sure the name exists in one of the `endpoints/*.php` files.
-- **Unauthorized**: Confirm that `ECOREGISTRY_API_SECRET` is set and that your account has access.
+- **Unauthorized**: Confirm that your account API key is correct and the token is not expired.
