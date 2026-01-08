@@ -35,6 +35,21 @@ export ECOREGISTRY_API_SECRET="your-secret"
 
 If you prefer a local file, place it in a `.env` file that is excluded from Git. Then load it before constructing `EcoregistryApi`.
 
+## Auth token example
+
+An example script for authenticating and getting a token lives in `examples/auth_token.php`.
+
+```bash
+php examples/auth_token.php
+```
+
+```php
+$response = $api->endpoint('auth.login')->call([], [
+    'email' => 'you@example.com',
+    'password' => 'your-password',
+]);
+```
+
 ## Endpoint layout (one file per GitBook page)
 
 Each file in `endpoints/` returns an array of endpoint definitions. This keeps a 1:1 mapping between documentation pages and PHP files. When you add or update endpoints from the GitBook documentation, edit the matching file or create a new one.
