@@ -56,6 +56,7 @@ Each file in `endpoints/` returns an array of endpoint definitions. This keeps a
 
 ```
 endpoints/
+  account.php
   auth.php
   organizations.php
   projects.php
