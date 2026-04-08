@@ -1,5 +1,9 @@
 /vendor/
 node_modules/
+.DS_Store
+.idea/
+savimbo_detail.json
+savimbo_platform.json
 npm-debug.log
 yarn-error.log
 
