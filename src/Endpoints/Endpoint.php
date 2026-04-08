@@ -27,8 +27,13 @@ final class Endpoint
         return $this->description;
     }
 
-    public function call(array $query = [], ?array $body = null, array $headers = []): array
+    public function call(array $params = [], array $query = [], ?array $body = null, array $headers = []): array
     {
-        return $this->client->request($this->method, $this->path, $query, $body, $headers);
+        $path = $this->path;
+        foreach ($params as $key => $value) {
+            $path = str_replace('{' . $key . '}', (string) $value, $path);
+        }
+
+        return $this->client->request($this->method, $path, $query, $body, $headers);
     }
 }

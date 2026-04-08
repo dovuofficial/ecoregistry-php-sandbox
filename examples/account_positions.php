@@ -6,18 +6,28 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use Ecoregistry\EcoregistryApi;
 
-$token = getenv('ECOREGISTRY_ACCOUNT_TOKEN') ?: '';
-if ($token === '') {
-    throw new RuntimeException('Set ECOREGISTRY_ACCOUNT_TOKEN before running this example.');
-}
+$dotenv = parse_ini_file(__DIR__ . '/../.env');
 
 $api = new EcoregistryApi(
-    baseUrl: 'https://api-ecoregistry-dev.ecoregistry.io/api',
+    baseUrl: $dotenv['ECOREGISTRY_BASE_URL'],
     apiSecret: null,
     endpointPath: __DIR__ . '/../endpoints'
 );
 
-$response = $api->endpoint('account.positions')->call([], null, [
+// Authenticate to get a short-lived JWT
+$authResponse = $api->endpoint('account.auth')->call([], [], [
+    'email' => $dotenv['AUTH_EMAIL'],
+    'apiKey' => $dotenv['TOKEN_API_EXCHANGES'],
+], [
+    'platform: ecoregistry',
+]);
+
+$token = $authResponse['data']['token'] ?? '';
+if ($token === '') {
+    throw new RuntimeException('Auth failed: ' . json_encode($authResponse));
+}
+
+$response = $api->endpoint('account.positions')->call([], [], null, [
     'platform: ecoregistry',
     'Authorization: Bearer ' . $token,
     'lng: en',
