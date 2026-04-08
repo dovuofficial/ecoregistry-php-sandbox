@@ -1,0 +1,24 @@
+<?php
+
+declare(strict_types=1);
+
+require __DIR__ . '/../vendor/autoload.php';
+
+use Ecoregistry\EcoregistryApi;
+
+$dotenv = parse_ini_file(__DIR__ . '/../.env');
+
+$api = new EcoregistryApi(
+    baseUrl: $dotenv['ECOREGISTRY_BASE_URL'],
+    apiSecret: null,
+    endpointPath: __DIR__ . '/../endpoints'
+);
+
+$response = $api->endpoint('account.auth')->call([], [], [
+    'email' => $dotenv['AUTH_EMAIL'],
+    'apiKey' => $dotenv['TOKEN_API_EXCHANGES'],
+], [
+    'platform: ecoregistry',
+]);
+
+var_dump($response);
