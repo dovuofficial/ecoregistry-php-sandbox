@@ -3,6 +3,14 @@
     "description": "Fluent PHP client for the EcoRegistry carbon credit registry API",
     "type": "library",
     "license": "MIT",
+    "homepage": "https://github.com/dovuofficial/ecoregistry-php-sandbox",
+    "keywords": ["ecoregistry", "carbon", "credits", "registry", "laravel", "api-client"],
+    "authors": [
+        {
+            "name": "DOVU",
+            "homepage": "https://dovu.earth"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "Ecoregistry\\": "src/"
