@@ -180,7 +180,7 @@ Account auth happens automatically — the client fetches a 5-minute JWT on firs
 | Platform (projects, sectors, industries, withdrawals) | Working | — |
 | Frontend (project list, detail) | Working | — |
 | Exchange admin (auth, projects, companies, positions) | Pending credentials | Working |
-| Exchange user (retirement, lock, transfer) | Pending credentials | Pending — user endpoint auth issue under investigation with EcoRegistry |
+| Exchange user (retirement, lock, transfer) | Pending credentials | Pending — user endpoint auth under investigation with EcoRegistry |
 | Marketplace | Pending onboarding | — |
 
 ## Tests
