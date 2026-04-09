@@ -1,17 +1,34 @@
 {
-  "name": "ecoregistry/php-sandbox",
-  "description": "Basic PHP client for the Ecoregistry API",
-  "type": "library",
-  "license": "MIT",
-  "autoload": {
-    "psr-4": {
-      "Ecoregistry\\": "src/"
+    "name": "dovu/ecoregistry-php",
+    "description": "Fluent PHP client for the EcoRegistry carbon credit registry API",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Ecoregistry\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Ecoregistry\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=8.1",
+        "ext-curl": "*",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.0"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Ecoregistry\\Laravel\\EcoRegistryServiceProvider"
+            ],
+            "aliases": {
+                "EcoRegistry": "Ecoregistry\\Laravel\\EcoRegistryFacade"
+            }
+        }
     }
-  },
-  "require": {
-    "php": ">=8.1"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "^11.0"
-  }
 }
