@@ -5,7 +5,7 @@ namespace Ecoregistry\Auth;
 
 use Ecoregistry\Http\ApiClient;
 
-final class TokenManager
+class TokenManager
 {
     private ?string $token = null;
 
