@@ -165,9 +165,3 @@ vendor/bin/phpunit --testsuite Integration
 # All
 vendor/bin/phpunit
 ```
-
-## Docs
-
-- `docs/example-listing-savimbo-CDB-1.md` — Full Savimbo project data as example of available granularity
-- `docs/internal-ecoregistry-integration-status.md` — Team status summary
-- `docs/email-ecoregistry-exchange-request.md` — Exchange registration request draft
