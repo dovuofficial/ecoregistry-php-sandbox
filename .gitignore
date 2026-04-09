@@ -1,5 +1,10 @@
 /vendor/
 node_modules/
+.DS_Store
+.idea/
+savimbo_detail.json
+savimbo_platform.json
+/docs/
 npm-debug.log
 yarn-error.log
 
@@ -28,3 +33,4 @@ Homestead.json
 .env.production
 .phpactor.json
 auth.json
+docs/email-response-to-thomas.md
