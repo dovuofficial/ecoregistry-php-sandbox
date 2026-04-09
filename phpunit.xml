@@ -5,8 +5,11 @@
          colors="true"
          stopOnFailure="false">
     <testsuites>
-        <testsuite name="API Smoke Tests">
-            <directory>tests</directory>
+        <testsuite name="Unit">
+            <directory>tests/Unit</directory>
+        </testsuite>
+        <testsuite name="Integration">
+            <directory>tests/Integration</directory>
         </testsuite>
     </testsuites>
 </phpunit>

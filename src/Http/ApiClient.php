@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Ecoregistry\Http;
 
-final class ApiClient
+class ApiClient
 {
     private string $baseUrl;
     private ?string $apiSecret;
