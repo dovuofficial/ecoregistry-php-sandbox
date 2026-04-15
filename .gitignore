@@ -33,3 +33,6 @@ Homestead.json
 .env.production
 .phpactor.json
 auth.json
+web/node_modules/
+web/.next/
+.superpowers/
