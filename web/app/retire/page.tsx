@@ -311,6 +311,19 @@ function RetireForm() {
           </CardContent>
         </Card>
 
+        {account === "user" && (
+          <Card className="border-amber-300 bg-amber-50 dark:bg-amber-950/20">
+            <CardContent className="pt-4 pb-3">
+              <p className="text-sm font-medium text-amber-800 dark:text-amber-400">
+                ⚠ This account is not connected to the DOVU exchange
+              </p>
+              <p className="text-xs text-amber-700 dark:text-amber-500 mt-1">
+                The DOVU exchange admin JWT cannot retire credits for accounts that are not linked to the exchange. This account can retire through the EcoRegistry UI directly, but not through the DOVU exchange API. Contact EcoRegistry to connect this account.
+              </p>
+            </CardContent>
+          </Card>
+        )}
+
         <Button
           type="submit"
           disabled={submitting || !selectedSerial || !reasonId}
