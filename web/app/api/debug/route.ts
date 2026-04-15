@@ -7,7 +7,8 @@ export async function POST(request: Request) {
   const { endpoint, method, headers, requestBody } = body;
 
   const projectRoot = path.resolve(process.cwd(), "..");
-  const envPath = path.join(projectRoot, ".env");
+  const envIniPath = path.join(projectRoot, ".env.ini");
+  const envPath = require("fs").existsSync(envIniPath) ? envIniPath : path.join(projectRoot, ".env");
 
   const phpCode = `
 <?php

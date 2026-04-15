@@ -37,3 +37,5 @@ web/node_modules/
 web/.next/
 .superpowers/
 tx-history.json
+.dovu-app-paas/state.json
+.env.ini

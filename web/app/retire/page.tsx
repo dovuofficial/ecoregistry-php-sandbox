@@ -318,7 +318,7 @@ function RetireForm() {
                 ⚠ This account is not connected to the DOVU exchange
               </p>
               <p className="text-xs text-amber-700 dark:text-amber-500 mt-1">
-                The DOVU exchange admin JWT cannot retire credits for accounts that are not linked to the exchange. This account can retire through the EcoRegistry UI directly, but not through the DOVU exchange API. Contact EcoRegistry to connect this account.
+                The DOVU exchange admin JWT cannot retire credits for accounts that are not linked to the exchange. Call the <code className="bg-amber-100 px-1 rounded">/link</code> endpoint to connect this account, then credits can be sent to the DOVU exchange for retirement.
               </p>
             </CardContent>
           </Card>

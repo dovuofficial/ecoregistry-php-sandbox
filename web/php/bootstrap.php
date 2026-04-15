@@ -4,7 +4,10 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 function loadEnv(): array {
-    return parse_ini_file(__DIR__ . '/../../.env') ?: [];
+    // Try .env.ini first (deployed), fall back to .env (local dev)
+    $base = __DIR__ . '/../../';
+    $path = file_exists($base . '.env.ini') ? $base . '.env.ini' : $base . '.env';
+    return parse_ini_file($path) ?: [];
 }
 
 function buildEco(array $env, string $account = 'general'): \Ecoregistry\EcoRegistry {
