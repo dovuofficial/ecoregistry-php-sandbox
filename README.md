@@ -183,13 +183,103 @@ Account auth happens automatically — the client fetches a 5-minute JWT on firs
 | Exchange user (retirement, lock, transfer) | Pending credentials | Pending — user endpoint auth under investigation with EcoRegistry |
 | Marketplace | Pending onboarding | — |
 
+## Web Explorer UI
+
+A Next.js debug/demo app that exercises the PHP SDK. Browse projects, view positions, execute retirements, and inspect API responses — all through a browser.
+
+### Prerequisites
+
+- PHP 8.1+ with `ext-curl` and `ext-json`
+- Node.js 18+
+- Composer dependencies installed (`composer install`)
+
+### Setup
+
+```bash
+# 1. Install PHP SDK dependencies (if not already done)
+composer install
+
+# 2. Install web dependencies
+cd web
+npm install
+
+# 3. Configure .env (copy from example and fill in credentials)
+cp .env.example .env
+```
+
+### Running
+
+```bash
+# Start the web UI (from project root)
+cd web
+npm run dev
+```
+
+Open **http://localhost:3000**.
+
+### Environment Variables
+
+The web app reads from the root `.env` file. Required variables:
+
+```env
+; UAT API
+UAT_BASE_URL="https://api-ecoregistry-dev.ecoregistry.io/api"
+
+; Exchange admin (shared across accounts)
+UAT_EXCHANGE_USERNAME="..."
+UAT_EXCHANGE_PASSWORD="..."
+UAT_EXCHANGE_NAME="..."
+
+; General account (exchange owner)
+GENERAL_EMAIL="generalaccount@yopmail.com"
+GENERAL_API_KEY="<token from EcoRegistry connectivity page>"
+GENERAL_COMPANY_ID="ECOxC_..."
+GENERAL_TOKEN_API_EXCHANGES=""
+
+; User account (e.g. Dovu test 1)
+USER_EMAIL="dovutest1@yopmail.com"
+USER_API_KEY="<token from EcoRegistry connectivity page>"
+USER_COMPANY_ID="ECOxC_..."
+USER_TOKEN_API_EXCHANGES=""
+
+; Production (read-only, for Production Preview tab)
+PLATFORM_TOKEN="<platform token for public API>"
+```
+
+**Account switching**: The dropdown in the nav bar switches between `GENERAL_*` and `USER_*` credentials. Each account uses different APIs for positions:
+
+| Account | Positions API | Retirement |
+|---------|--------------|------------|
+| General | Exchange admin API (`/api-exchange-v2/v2/get-all-positions`) | Works via admin JWT |
+| User | Account API (`/api-account/v1/positions`) | Blocked — `x-api-key` auth under investigation |
+
+### Features
+
+| Tab | Description |
+|-----|-------------|
+| **Projects** | Exchange project cards with credit stats |
+| **Positions** | Serial balances for the selected account |
+| **History** | Local transaction log of retirements executed through the UI |
+| **Production Preview** | Read-only view of 229 production projects with full detail (serials, SDGs, vintages) |
+| **Debug** | Custom auth testing — paste tokens, pick endpoints, fire requests |
+
+### Architecture
+
+```
+Browser → Next.js API routes → PHP CLI scripts (web/php/) → EcoRegistry API
+                                      ↓
+                              Uses the PHP SDK (src/)
+```
+
+The PHP SDK is the system under test. Each API route shells out to a PHP script that uses the SDK, outputs JSON, and the Next.js route returns it to the browser.
+
 ## Tests
 
 ```bash
 # Unit tests (mocked, no API calls)
 vendor/bin/phpunit --testsuite Unit
 
-# Integration tests (hits live production API, needs .env)
+# Integration tests (hits UAT API, needs .env)
 vendor/bin/phpunit --testsuite Integration
 
 # All

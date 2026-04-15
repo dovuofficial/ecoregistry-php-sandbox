@@ -22,7 +22,13 @@ try {
         ->observation($input['observation'] ?? '')
         ->execute();
 
-    jsonOut(['success' => true, 'result' => $result]);
+    // Check if EcoRegistry returned an error inside the result
+    $isError = isset($result['status']) && $result['status'] === 0;
+    if ($isError) {
+        jsonOut(['success' => false, 'result' => $result]);
+    } else {
+        jsonOut(['success' => true, 'result' => $result]);
+    }
 } catch (\Throwable $e) {
     errorOut($e->getMessage());
 }

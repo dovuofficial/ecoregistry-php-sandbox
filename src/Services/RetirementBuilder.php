@@ -26,7 +26,7 @@ final class RetirementBuilder
     private ?array $passiveSubject = null;
     private bool $inKg = false;
 
-    /** @var callable(array, string): array */
+    /** @var callable(array, string, string): array */
     private $executor;
 
     public function __construct(callable $executor)
@@ -168,6 +168,7 @@ final class RetirementBuilder
 
         $body = [
             'reasonUsingCarbonOffsetsId' => $this->reasonId,
+            'serialElegibleId' => $this->reasonId,
             'quantity' => $this->quantity,
             'serial' => $this->serial,
             'observation' => $this->observation,
@@ -183,6 +184,6 @@ final class RetirementBuilder
             ? '/api-exchange-v2/v2/retirement-kg'
             : '/api-exchange-v2/v2/retirement';
 
-        return ($this->executor)($body, $lang);
+        return ($this->executor)($body, $lang, $path);
     }
 }

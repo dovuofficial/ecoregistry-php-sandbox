@@ -110,8 +110,8 @@ final class ExchangeService
     {
         $this->requireToken();
 
-        return new RetirementBuilder(function (array $body, string $lang): array {
-            return $this->userPost('/api-exchange-v2/v2/retirement', $body, $lang);
+        return new RetirementBuilder(function (array $body, string $lang, string $path): array {
+            return $this->userPost($path, $body, $lang);
         });
     }
 
@@ -145,9 +145,7 @@ final class ExchangeService
     private function userHeaders(string $lang): array
     {
         $headers = $this->adminHeaders($lang);
-        if ($this->userApiKey) {
-            $headers[] = 'x-api-key: ' . $this->userApiKey;
-        }
+        $headers[] = 'x-api-key: ' . ($this->userApiKey ?: $this->adminToken);
         return $headers;
     }
 

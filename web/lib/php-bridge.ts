@@ -28,7 +28,8 @@ export function runPhp<T = unknown>(
       cwd: PROJECT_ROOT,
       input: stdin,
       encoding: "utf-8",
-      timeout: 30000,
+      timeout: 60000,
+      maxBuffer: 50 * 1024 * 1024,
       stdio: ["pipe", "pipe", "pipe"],
     });
   } catch (err: unknown) {

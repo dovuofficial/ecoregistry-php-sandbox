@@ -43,8 +43,17 @@ export function PositionsTable() {
       <p className="mb-4 text-sm text-muted-foreground">
         {loading
           ? "Loading..."
-          : `${serials.length} serials for ${account} account`}
+          : serials.length > 0
+            ? `${serials.length} serials for ${account} account`
+            : `No serials found for ${account} account — the exchange admin API may not expose this account's positions`}
       </p>
+      {serials.length === 0 && !loading && (
+        <div className="rounded-lg border border-dashed p-8 text-center text-sm text-muted-foreground">
+          {account === "user"
+            ? "The \"Dovu test 1\" account's credits (CDC_4, CDC_35) are visible in the EcoRegistry UI but not through the exchange admin positions API. This is the same x-api-key auth limitation that affects retirement for this account."
+            : "No positions found."}
+        </div>
+      )}
       <Table>
         <TableHeader>
           <TableRow>

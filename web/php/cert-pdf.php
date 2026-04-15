@@ -9,7 +9,19 @@ if ($transactionId < 1) {
 
 try {
     $client = new \Ecoregistry\Http\ApiClient($env['UAT_BASE_URL']);
-    $response = $client->request('GET', '/marketplace/v1/emit-certification-pdf/' . $transactionId);
+
+    // Get exchange admin token for auth
+    $authResponse = $client->request('POST', '/api-exchange-v2/v2/auth', [], [
+        'user_name'     => $env['UAT_EXCHANGE_USERNAME'],
+        'password'      => $env['UAT_EXCHANGE_PASSWORD'],
+        'name_exchange' => $env['UAT_EXCHANGE_NAME'],
+    ], ['platform: ecoregistry']);
+    $adminToken = $authResponse['data']['token_admin'] ?? $authResponse['data']['token'] ?? null;
+
+    $response = $client->request('GET', '/marketplace/v1/emit-certification-pdf/' . $transactionId, [], null, [
+        'platform: ecoregistry',
+        'x-api-key-admin: ' . $adminToken,
+    ]);
     jsonOut($response['data']);
 } catch (\Throwable $e) {
     errorOut($e->getMessage());

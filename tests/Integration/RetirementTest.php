@@ -27,15 +27,15 @@ final class RetirementTest extends TestCase
             'exchange_username' => self::$dotenv['UAT_EXCHANGE_USERNAME'],
             'exchange_password' => self::$dotenv['UAT_EXCHANGE_PASSWORD'],
             'exchange_name' => self::$dotenv['UAT_EXCHANGE_NAME'],
-            'exchange_user_api_key' => self::$dotenv['UAT_API_KEY'],
+            // user API key not needed — admin token is used for both headers
         ]));
     }
 
-    public function test_retire_10_credits(): void
+    public function test_retire_1_credit(): void
     {
         $result = self::$eco->exchange()->auth()->retirement()
             ->serial('CDC_18_5_11_321_14_XX_XA_CO_1_1_2021')
-            ->quantity(10)
+            ->quantity(1)
             ->voluntaryCompensation()
             ->endUser(
                 name: 'DOVU Market',
@@ -50,5 +50,9 @@ final class RetirementTest extends TestCase
         fwrite(STDERR, json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . "\n");
 
         $this->assertIsArray($result);
+        $this->assertArrayHasKey('data', $result);
+        $this->assertArrayHasKey('transactionId', $result);
+        $this->assertArrayHasKey('urlPDF', $result);
+        $this->assertEquals(1, $result['data']['quantity'] ?? null);
     }
 }

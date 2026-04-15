@@ -7,6 +7,7 @@ import { ProjectCard } from "@/components/project-card";
 import { PositionsTable } from "@/components/positions-table";
 import { ProductionPreview } from "@/components/production-preview";
 import { DebugPanel } from "@/components/debug-panel";
+import { TxHistoryTable } from "@/components/tx-history-table";
 import { ApiResponseViewer } from "@/components/api-response-viewer";
 import type { ExchangeProject, Serial, DebugInfo } from "@/lib/types";
 
@@ -23,7 +24,8 @@ export default function Dashboard() {
       fetch(`/api/projects?account=${account}`).then((r) => r.json()),
       fetch(`/api/positions?account=${account}`).then((r) => r.json()),
     ]).then(([projData, posData]) => {
-      setProjects(projData.projects ?? projData.project ?? []);
+      const proj = projData.projects;
+      setProjects(Array.isArray(proj) ? proj : proj?.project ?? projData.project ?? []);
       setDebug(projData._debug ?? null);
       const balanceMap: Record<string, Serial[]> = {};
       for (const b of posData.balance ?? []) {
@@ -44,6 +46,7 @@ export default function Dashboard() {
         <TabsList>
           <TabsTrigger value="projects">Projects</TabsTrigger>
           <TabsTrigger value="positions">Positions</TabsTrigger>
+          <TabsTrigger value="history">History</TabsTrigger>
           <TabsTrigger value="production">Production Preview</TabsTrigger>
           <TabsTrigger value="debug" className="text-muted-foreground">
             Debug
@@ -71,6 +74,10 @@ export default function Dashboard() {
 
         <TabsContent value="positions" className="mt-6">
           <PositionsTable />
+        </TabsContent>
+
+        <TabsContent value="history" className="mt-6">
+          <TxHistoryTable />
         </TabsContent>
 
         <TabsContent value="production" className="mt-6">

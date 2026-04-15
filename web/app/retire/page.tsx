@@ -58,13 +58,13 @@ function RetireForm() {
   const [result, setResult] = useState<RetirementResult | null>(null);
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
 
-  // Form fields
+  // Form fields — defaults match what we've been using in tests
   const [quantity, setQuantity] = useState("1");
   const [reasonId, setReasonId] = useState("");
-  const [endUserName, setEndUserName] = useState("");
-  const [countryId, setCountryId] = useState("170"); // default Colombia
+  const [endUserName, setEndUserName] = useState("DOVU Market");
+  const [countryId, setCountryId] = useState("230"); // UK
   const [docTypeId, setDocTypeId] = useState("1");
-  const [docNumber, setDocNumber] = useState("");
+  const [docNumber, setDocNumber] = useState("267167674");
   const [observation, setObservation] = useState("");
 
   useEffect(() => {
@@ -91,11 +91,11 @@ function RetireForm() {
     fetch(`/api/serial-eligible?account=${account}&serial=${encodeURIComponent(selectedSerial)}`)
       .then((r) => r.json())
       .then((data) => {
-        setEligibleReasons(data.reasons ?? []);
+        setEligibleReasons(data.elegible ?? []);
         setEligibilityDebug(data._debug ?? null);
         setLoadingEligibility(false);
-        if (data.reasons?.length > 0) {
-          setReasonId(String(data.reasons[0].reasonUsingCarbonOffsetsId));
+        if (data.elegible?.length > 0) {
+          setReasonId(String(data.elegible[0].reasonUsingCarbonOffsetsId));
         }
       });
   }, [selectedSerial, account]);
@@ -131,11 +131,27 @@ function RetireForm() {
       const txId = data.result.transactionId;
       const pdfRes = await fetch(`/api/cert-pdf/${txId}`);
       const pdfData = await pdfRes.json();
-      if (pdfData.url) {
-        setPdfUrl(pdfData.url);
+      if (pdfData.urlPDF) {
+        setPdfUrl(pdfData.urlPDF);
       } else if (data.result.urlPDF) {
         setPdfUrl(data.result.urlPDF);
       }
+
+      // Save to local transaction history
+      fetch("/api/tx-history", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          transactionId: txId,
+          serial: selectedSerial,
+          quantity: Number(quantity),
+          date: data.result.data?.date ?? new Date().toISOString(),
+          account,
+          observation,
+          urlPDF: pdfData.urlPDF ?? data.result.urlPDF,
+          timestamp: new Date().toISOString(),
+        }),
+      });
     }
 
     setSubmitting(false);
@@ -321,11 +337,11 @@ function RetireForm() {
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">Quantity Retired</p>
-                    <p className="font-bold">{result.result.data.quantity.toLocaleString()}</p>
+                    <p className="font-bold">{result.result.data?.quantity?.toLocaleString() ?? "-"}</p>
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground">Date</p>
-                    <p className="font-bold">{result.result.data.date}</p>
+                    <p className="font-bold">{result.result.data?.date ?? "-"}</p>
                   </div>
                 </div>
                 {(pdfUrl ?? result.result.urlPDF) && (
@@ -349,7 +365,7 @@ function RetireForm() {
               </CardHeader>
               <CardContent>
                 <pre className="rounded-lg bg-slate-800 p-4 text-xs text-slate-200 overflow-auto max-h-60">
-                  {JSON.stringify({ error: result.error, detail: result.detail }, null, 2)}
+                  {JSON.stringify(result.result ?? result.error ?? result.detail ?? result, null, 2)}
                 </pre>
               </CardContent>
             </Card>

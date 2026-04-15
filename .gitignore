@@ -36,3 +36,4 @@ auth.json
 web/node_modules/
 web/.next/
 .superpowers/
+tx-history.json
